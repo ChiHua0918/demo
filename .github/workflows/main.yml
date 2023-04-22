@@ -17,3 +17,12 @@ jobs:
 
     - name: test python file
       run: python3 test.py Amber
+  build:
+    runs-on: ['self-hosted','demo']
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: login docker hub
+        env:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+        run: echo $username
