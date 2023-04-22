@@ -25,4 +25,5 @@ jobs:
       - name: login docker hub
         env:
           username: ${{secrets.DOCKERHUB_USERNAME}}
-        run: echo $username
+          password: ${{secrets.DOCKERHUB_PASSWORD}}
+        run: docker login -u $username -p password
