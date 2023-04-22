@@ -22,16 +22,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: build a docker image
+        env:
+          imageName: ${{secrets.DOCKERHUB_USERNAME}}/demo
+        run: docker build -t $imageName .
+      
       - name: login docker hub
         env:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_PASSWORD}}
         run: docker login -u $username -p $password
-      
-      - name: build a docker image
-        env:
-          imageName: ${{secrets.DOCKERHUB_USERNAME}}/demo
-        run: docker build -t $imageName .
       
       - name: push to docker hub
         env:
