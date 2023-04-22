@@ -1,0 +1,194 @@
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="../static/css/product.css">
+</head>
+<!-- bulletin board -->
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+  <ol id="boardIndicators" class="carousel-indicators">
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+  </ol>
+  <div id="boardInner" class="carousel-inner">
+    <!-- 蛋捲特色 -->
+    <div class="carousel-item active">
+      <img class="d-block w-100" src="../static/board/character.jpg">
+    </div>
+    <!-- 購物流程 -->
+    <div class="carousel-item">
+      <a href="https://www.facebook.com/profile.php?id=100085572874682" target="_blank">
+        <img class="d-block w-100" src="../static/board/購物流程.jpg">
+      </a>
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+<!-- promotion list -->
+<div class="container">
+  <div class="row justify-content-md-center">
+    <h3>蛋捲系列</h3>
+    <div id="eggRoll" class="row cardList"></div>
+    <h3>禮盒系列</h3>
+    <div id="box" class="row cardList"></div>
+    <h3>抹醬系列</h3>
+    <div id="spread" class="row cardList"></div>
+  </div>
+</div>
+
+<!-- js -->
+<script>
+  // 商品照片路徑
+  var goodPath = "../static/goods";
+  $().ready(function () {
+    // bulletin board 公告板相關資訊
+    $.ajax({
+      url: '/getBoardInfo',
+      type: "GET",
+      data: {},
+      async: false,
+      success: function (result) {
+        var promotion = result.promotion;
+        for (var i = 0; i < promotion.length; i++) {
+          // 計算目前固定的公告數量有多少個
+          let boardNum = $(".carouselExampleIndicators").length;
+          document.getElementById('boardIndicators').innerHTML += `<li data-target="#carouselExampleIndicators" data-slide-to="${i + boardNum}"></li>`;
+          let boardInfo = `<div class="carousel-item">
+                              <a href="${promotion[i].link}" target="_blank">
+                                <img class="d-block w-100" src="../static/board/${promotion[i].imgName}.jpg" alt="${promotion[i].title}">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>${promotion[i].title}</h5>
+                                    <p>${promotion[i].description}</p>
+                                </div>
+                              </a>
+                          </div>`;
+          document.getElementById('boardInner').innerHTML += boardInfo;
+        }
+      },
+      error: function (error) {
+        alert("====== error getBoardInfo =======", error);
+      }
+    });
+    // get good info
+    $.ajax({
+      url: '/getGoodsInfo',
+      type: "GET",
+      data: {},
+      async: false,
+      /*result為后端函式回傳的json*/
+      success: function (result) {
+        let goods = result.goods;
+        for (var i = 0; i < goods.length; i++) {
+          let card = `<div class="card" style="width: 19rem;">
+                        <div class="cardModel">
+                          <img class="card-img-top rounded" src="${goodPath}/${goods[i].type}/${goods[i].name}.jpg" alt="${goods[i].name}">
+                          <div class="card-body">
+                            <h5 class="card-title">${goods[i].name}</h5>
+                            <p class="cardDetail">${goods[i].description}</p>
+                            <p class="cardDetail">NT$${goods[i].price}</p>
+                          </div>
+                        </div>
+                      </div>`;
+          // var card = `<div class="text-center card col-xs-10 col-sm-6 col-md-4 col-lg-3">
+          //                 <img src="${goodPath}/${goods[i][i][2]}/${goods[i][i][0]}.jpg"/>
+          //                 <p>${goods[i][i][0]}</p>
+          //             </div>`;
+          document.getElementById(goods[i].type).innerHTML += card;
+          // console.log(document.getElementsByClassName("container"));
+        }
+      },
+      error: function (error) {
+        alert("====== error getGoodInfo =======", error);
+      }
+    });
+  })
+
+// var test = [
+//     {
+//         "name":"咖啡蛋捲",
+//         "price":190,
+//         "type":"eggRoll"
+//     },
+//     {
+//         "name":"鹹鴨蛋蛋捲",
+//         "price":170,
+//         "type":"eggRoll"
+//     },
+//     {
+//         "name":"蒜頭蛋捲",
+//         "price":170,
+//         "type":"eggRoll"
+//     },
+//     {
+//         "name":"肉鬆蛋捲",
+//         "price":200,
+//         "type":"eggRoll"
+//     },
+//     {
+//         "name":"原味蛋捲",
+//         "price":170,
+//         "type":"eggRoll"
+//     },
+//     {
+//         "name":"海苔蛋捲",
+//         "price":180,
+//         "type":"eggRoll"
+//     },
+//     {
+//         "name":"芝麻蛋捲",
+//         "price":180,
+//         "type":"eggRoll"
+//     },
+//     {
+//         "name":"紅茶蛋捲",
+//         "price":170,
+//         "type":"eggRoll"
+//     },
+//     {
+//         "name":"京福氣禮盒",
+//         "price":588,
+//         "type":"box"
+//     },
+//     {
+//         "name":"京吉利五行禮盒",
+//         "price":888,
+//         "type":"box"
+//     },
+//     {
+//         "name":"蒜頭奶油抹醬",
+//         "price":180,
+//         "type":"spread"
+//     }
+// ]
+
+//     $().ready(function(){
+//         console.log(test.length);
+//         for (var i = 0; i < test.length; i++){
+//             var tmp = test[i]
+//             console.log(tmp);
+//             $.ajax({
+//                 url: '/insertGoodsInfo',
+//                 type: "POST",
+//                 data: {
+//                         "name":tmp['name'],
+//                         "price":tmp['price'],
+//                         "type":tmp['type']
+//                       },
+//                 async: false,
+//                 /*result為后端函式回傳的json*/
+//                 success: function (result) {
+//                     // alert(result.info);
+//                 },
+//                 error: function(error){
+//                     alert("====== error =======",error);
+//                 }
+//             });
+//         }
+//     })
+</script>
