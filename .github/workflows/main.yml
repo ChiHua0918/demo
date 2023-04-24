@@ -17,39 +17,39 @@ jobs:
 
     - name: test python file
       run: python3 test.py Amber
-  # build:
-  #   runs-on: ['self-hosted','build_deploy']
-  #   steps:
-  #     - uses: actions/checkout@v3
+  build:
+    runs-on: ['self-hosted','build_deploy']
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - name: login docker hub
-  #       env:
-  #         username: ${{secrets.DOCKERHUB_USERNAME}}
-  #         password: ${{secrets.DOCKERHUB_PASSWORD}}
-  #       run: docker login -u $username -p $password
+      - name: login docker hub
+        env:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_PASSWORD}}
+        run: docker login -u $username -p $password
       
-  #     - name: build a docker image
-  #       env:
-  #         imageName: ${{secrets.DOCKERHUB_USERNAME}}/demo
-  #       run: docker build -t $imageName .
+      - name: build a docker image
+        env:
+          imageName: ${{secrets.DOCKERHUB_USERNAME}}/demo
+        run: docker build -t $imageName .
       
-  #     - name: push to docker hub
-  #       env:
-  #         imageName: ${{secrets.DOCKERHUB_USERNAME}}/demo
-  #       run: docker push $imageName
-  # deploy:
-  #   needs: build
-  #   runs-on: ['self-hosted','build_deploy']
-  #   steps:
-  #     - name: create  a docker-compose.yml
-  #       run: touch docker-compose.yml
+      - name: push to docker hub
+        env:
+          imageName: ${{secrets.DOCKERHUB_USERNAME}}/demo
+        run: docker push $imageName
+  deploy:
+    needs: build
+    runs-on: ['self-hosted','build_deploy']
+    steps:
+      - name: create  a docker-compose.yml
+        run: touch docker-compose.yml
 
-  #     - name: write in docker-compose
-  #       env:
-  #         imageName: ${{secrets.DOCKERHUB_USERNAME}}/demo
-  #       run: |
-  #             imageName = $imageName
-  #             echo -e "version: '3'\nservices:\n  app:\n    image: $imageName\n    ports:\n      - '8080:8080'" > docker-compose.yml
+      - name: write in docker-compose
+        env:
+          imageName: ${{secrets.DOCKERHUB_USERNAME}}/demo
+        run: |
+              imageName = $imageName
+              echo -e "version: '3'\nservices:\n  app:\n    image: $imageName\n    ports:\n      - '8080:8080'" > docker-compose.yml
 
-  #     - name: run image
-  #       run: docker-compose up -d
+      - name: run image
+        run: docker-compose up -d
