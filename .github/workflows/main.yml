@@ -53,3 +53,4 @@ jobs:
 
       - name: run image
         run: docker-compose up -d
+        
