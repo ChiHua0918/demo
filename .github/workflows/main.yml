@@ -49,5 +49,6 @@ jobs:
           imageName: ${{secrets.DOCKERHUB_USERNAME}}/demo
         run: echo -e "version: '3'\nservices:\n  app:\n    image: $imageName\n    ports:\n      - '8080:8080'" > docker-compose.yml
 
+
       - name: run image
         run: docker-compose up -d
